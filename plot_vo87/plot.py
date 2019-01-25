@@ -38,19 +38,23 @@ def ratio(data, x_raw1, x_raw2, y_raw1, y_raw2):									# on x-asis (x1/x2), on
 	y_ratio = np.log(np.array(y1) / np.array(y2))
 	return x_ratio, y_ratio
 
-def ratio_class(data, x_raw1, x_raw2, y_raw1, y_raw2, table=False):						# on x-asis (x1/x2), on y-asis (y1/y2) + classification
-	x_raw1, x_raw2, label_x = data[x_raw1][:], data[x_raw2][:], data['classification'][:]  		# obtain data for x1, and x2 + classes
+def ratio_class(data, x_raw1_name, x_raw2_name, y_raw1_name, y_raw2_name, table=False):						# on x-asis (x1/x2), on y-asis (y1/y2) + classification
+	x_raw1, x_raw2, label_x = data[x_raw1_name][:], data[x_raw2_name][:], data['classification'][:]  		# obtain data for x1, and x2 + classes
 	x1, x2, x_class = x_raw1[np.logical_not(x_raw1==0)], x_raw2[np.logical_not(x_raw1==0)], label_x[np.logical_not(x_raw1==0)]
 	
-	y_raw1, y_raw2, label_y = data[y_raw1][:], data[y_raw2][:], data['classification'][:]  		 		# obtain data for y1, and y2 + classes
+	y_raw1, y_raw2, label_y = data[y_raw1_name][:], data[y_raw2_name][:], data['classification'][:]  		 		# obtain data for y1, and y2 + classes
 	y1, y2, y_class = y_raw1[np.logical_not(x_raw1==0)], y_raw2[np.logical_not(x_raw1==0)], label_y[np.logical_not(x_raw1==0)]
 	
 	x = np.log(np.array(x1) / np.array(x2))
 	y = np.log(np.array(y1) / np.array(y2))
 	
+	
 	x_ratio = x[~np.isnan(x)]
 	x_class = x_class[~np.isnan(x)]
 	y_ratio = y[~np.isnan(x)]
+	
+	x1, x2 = x1[~np.isnan(x)], x2[~np.isnan(x)]
+	y1, y2 = y1[~np.isnan(x)], y2[~np.isnan(x)]
 	
 	if table == True:
 		table_name = input("\n ----------------------------------------------------------------------- \n                         You used table=True  \n !! put name emission line on x-axis in the tablename e.g.[O[ii]3729] !! \n tablename=  ")
@@ -65,6 +69,16 @@ def ratio_class(data, x_raw1, x_raw2, y_raw1, y_raw2, table=False):						# on x-
 		new_table.add_column(bb, index=1)  # Insert in second table column
 		cc = Column(y_ratio, name='y_ratio')
 		new_table.add_column(cc, index=2)  # Insert in third table column
+		dd = Column(x1, name='%s' %(x_raw1_name))
+		new_table.add_column(dd, index=3)  # Insert in fourth table column
+		ee = Column(x2, name='%s' %(x_raw2_name))
+		new_table.add_column(ee, index=4)  # Insert in fifth table column
+		ff = Column(y1, name='%s' %(y_raw1_name))		
+		new_table.add_column(ff, index=5)  # Insert in sixth table column
+		
+		# We do not import values for y2, since these are equal to the values of x2 (H_beta) for our classification purposes 
+		#gg = Column(y2, name='%s' %(y_raw2_name))		
+		#new_table.add_column(gg, index=5)  # Insert in sixth table column
 		
 		ascii.write(new_table, output='/Users/users/mulder/astrods/project/datatables/%s.csv' %(table_name), format='csv', overwrite=True)
 		print("table %s.csv is stored in /astrods/project/datatables/")
