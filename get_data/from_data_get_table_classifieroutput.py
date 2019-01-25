@@ -6,15 +6,15 @@ import numpy as np
 from astroquery.sdss import SDSS
 from astropy import coordinates as coords
 
-data = astropy.io.ascii.read('/Users/users/mulder/astrods/project/sample_trainingsetwithclass.csv',format='csv', fast_reader=False)
+data = astropy.io.ascii.read('/Users/users/mulder/astrods/projectgit/datatables/o3729_withoriginaldata+class.csv',format='csv', fast_reader=False)
 print(data)
 
 from astropy.io.votable import from_table, writeto
 votable = from_table(data)
-writeto(votable, 'test.xml')
+writeto(votable, '/Users/users/mulder/astrods/projectgit/datatables/o3729.xml')
 
 import pandas as pd
-df = pd.read_csv('/Users/users/mulder/astrods/project/sample_trainingsetwithclass.csv')
+df = pd.read_csv('/Users/users/mulder/astrods/projectgit/datatables/o3729_withoriginaldata+class.csv')
 print(df)
 
 
@@ -34,21 +34,21 @@ def convert_info(resource_name, table_name, description):
           <FIELDref utype="stc:AstroCoords.Position2D.Value2.C1" ref="col1"/>
           <FIELDref utype="stc:AstroCoords.Position2D.Value2.C2" ref="col2"/>
         </GROUP>
-        <FIELD ID="classification" arraysize="3" 
-          datatype="unicodeChar" name="Classification"/>
-        <FIELD ID="plate" datatype="long" name="plate"/>
-        <FIELD ID="fiberid" datatype="long" name="fiberid"/>
-        <FIELD ID="mjd" datatype="long" name="mjd"/>
-        <FIELD ID="z" datatype="double" name="z"/>
-          <DESCRIPTION>Distance of Galaxy, assuming H=75km/s/Mpc</DESCRIPTION>
+        <FIELD ID="x_ratio" datatype="double" name="x_ratio"/>
+        <FIELD ID="y_ratio" datatype="double" name="y_ratio"/>
+        <FIELD ID="oii_3729_flux" datatype="double" name="oii_3726_flux"/>
         <FIELD ID="h_beta_flux" datatype="double" name="h_beta_flux"/>
-        <FIELD ID="h_beta_flux_err" datatype="double" name="h_beta_flux_err"/>
-        <FIELD ID="oii_3726_flux" datatype="double" name="oii_3726_flux"/>
-        <FIELD ID="oii_3726_flux_err" datatype="double" name="oii_3726_flux_err"/>
-        <FIELD ID="oii_3729_flux" datatype="double" name="oii_3729_flux"/>
-        <FIELD ID="oii_3729_flux_err" datatype="double" name="oii_3729_flux_err"/>
         <FIELD ID="oiii_5007_flux" datatype="double" name="oiii_5007_flux"/>
-        <FIELD ID="oiii_5007_flux_err" datatype="double" name="oiii_5007_flux_err"/>
+        <FIELD ID="class_line" arraysize="3" datatype="unicodeChar" name="class_line"/>
+		  <DESCRIPTION>Determined by using the VO87 diagnostic plot using Python</DESCRIPTION>
+        <FIELD ID="class_knn1" arraysize="3" datatype="unicodeChar" name="class_knn1"/>
+		  <DESCRIPTION>Determined by using the klaR package of the computer language R</DESCRIPTION>
+        <FIELD ID="class_knn3" arraysize="3" datatype="unicodeChar" name="class_knn3"/>
+		  <DESCRIPTION>Determined by using the klaR package of the computer language R</DESCRIPTION>
+        <FIELD ID="class_lda" arraysize="3" datatype="unicodeChar" name="class_lda"/>
+		  <DESCRIPTION>Determined by using the klaR package of the computer language R</DESCRIPTION>
+        <FIELD ID="class_qda" arraysize="3" datatype="unicodeChar" name="class_qda"/>
+		  <DESCRIPTION>Determined by using the klaR package of the computer language R</DESCRIPTION>
         </FIELD>
         <DATA>
           <TABLEDATA>""" %(resource_name, table_name, description) 
@@ -56,9 +56,9 @@ def convert_info(resource_name, table_name, description):
 
 def convert_row(row):
     return """          <TR>
-            <TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD>
+            <TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD>
           <TR>""" % ( 
-	row.classification, row.plate, row.fiberid, row.mjd, row.z, row.h_beta_flux, row.h_beta_flux_err, row.oii_3726_flux, row.oii_3726_flux_err, row.oii_3729_flux, row.oii_3729_flux_err, row.oiii_5007_flux, row.oiii_5007_flux_err)
+	row.x_ratio, row.y_ratio, row.oii_3729_flux, row.h_beta_flux, row.oiii_5007_flux, row.class_line, row.class_knn1, row.class_knn3, row.class_lda, row.class_qda)
 
     
 def convert_endinfo():
