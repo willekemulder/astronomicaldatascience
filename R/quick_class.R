@@ -72,9 +72,6 @@ for(i in 1:nrFolds){
   knn_3.wrong = 0
   
   for(i in 1:length(newtest[,1])){
-#    print(lin[i])
-#    print(data.test$classification[i])
-#    print(identical(lin[i], data.test$classification[i]))
     if (identical(lin[i], data.test$classification[i]) == TRUE){
       lin.correct = lin.correct + 1
     } else {
@@ -105,13 +102,10 @@ for(i in 1:nrFolds){
   rc_knn1 <- knn_1.correct/(knn_1.correct+knn_1.wrong)
   rc_knn3 <- knn_3.correct/(knn_3.correct+knn_3.wrong) 
   
-#  class_rate <- data.frame(rc_lin, rc_qda, rc_knn1, rc_knn3)
-#  test <- data.frame(storage[1]+rc_lin, storage[2]+rc_qda, storage[3]+rc_knn1, storage[4]+rc_knn3)
   storage_l = storage_l + rc_lin
   storage_q = storage_q + rc_qda
   storage_k1 = storage_k1 + rc_knn1
   storage_k3 = storage_k3 + rc_knn3
 }
-#class_rate <- data.frame(storage_l/nrFolds, storage_q/nrFolds, storage_k1/nrFolds, storage_k3/nrFolds)
-#write.table(class_rate, file=paste0('classrates_', data_name ,'_fold=', nrFolds ,'.csv'), row.names=FALSE, sep=',')
-
+class_rate <- data.frame(storage_l/nrFolds, storage_q/nrFolds, storage_k1/nrFolds, storage_k3/nrFolds)
+write.table(class_rate, file=paste0('classrates_', data_name ,'_fold=', nrFolds ,'.csv'), row.names=FALSE, sep=',')
